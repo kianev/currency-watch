@@ -1,4 +1,7 @@
-# currency-monitor
+# About
+
+Visit the [website](https://kianev.github.io/currency-watch/)
+
 
 # Data Feed
 
