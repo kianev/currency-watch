@@ -23,16 +23,28 @@ setInterval(function updateData() {
                 let currUpdate = [data.rates.USD, data.rates.EUR, data.rates.GBP, data.rates.JPY, data.rates.AUD, data.rates.BGN];
 
                 let diff = cur - Number((currUpdate[i]).toFixed(4));
-                let colorCurr = diff == 0 ? "black" : (diff > 0 ? "red" : "green");
+                let colorCurr = diff == 0 ? "blue" : (diff > 0 ? "red" : "green");
 
                 $("#" + i).css("color", colorCurr);
                 $("#" + i)
                         .empty()
                         .append((currUpdate[i])
                         .toFixed(4));
+
+                if(diff > 0){
+                    $(".curr" + i)
+                        .empty()
+                        .append('<img src="images/redArrow1.jpg"/>');
+                }else if(diff < 0){
+                    $(".curr" + i)
+                        .empty()
+                        .append('<img src="images/greenArrow1.jpg"/>');
+                }
             });
+
+
     }
-}, 60000);
+}, 6000);
 
 
 
