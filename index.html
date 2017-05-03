@@ -1,44 +1,50 @@
 <!DOCTYPE HTML>
 <html>
-  <head>
+<head>
     <title>Currency Watch</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
     <script src="scripts/application.js"></script>
     <link rel="stylesheet" type="text/css" href="stylesheets/application.css">
-  </head>
-  <body>
-    <table>
-      <tr>
+</head>
+<body>
+<table id="curr">
+    <tr>
         <th>Currency</th>
         <th>Rate</th>
         <th>&nbsp;</th>
-      </tr>
-      <tr>
-        <td>EUR/USD</td>
-        <td id = "eur"></td>
+    </tr>
+    <tr>
+        <td>USD/EUR</td>
+        <td id="1" class="curr"></td>
         <td></td>
-      </tr>
-      <tr>
-        <td>GBP/USD</td>
-        <td id = "gbp"></td>
+    </tr>
+    <tr>
+        <td>USD/GBP</td>
+        <td id="2" class="curr"></td>
         <td></td>
-      </tr>
-      <tr>
+    </tr>
+    <tr>
         <td>USD/JPY</td>
-        <td id = "jpy"></td>
+        <td id="3" class="curr"></td>
         <td></td>
-      </tr>
-      <tr>
+    </tr>
+    <tr>
         <td>USD/AUD</td>
-        <td id = "aud"></td>
+        <td id="4" class="curr"></td>
         <td></td>
-      </tr>
-      <tr>
+    </tr>
+    <tr>
         <td>USD/BGN</td>
-        <td id = "bgn"></td>
+        <td id="5" class="curr"></td>
         <td></td>
-      </tr>
-    </table>
+    </tr>
+</table>
+<script>
+    $(function(){
+        getInitialData();
+    });
+</script>
 
-  </body>
+</body>
 </html>

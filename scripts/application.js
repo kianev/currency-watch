@@ -1,27 +1,40 @@
-
 const appID = "282beb85831a4aadad7086809d54e5fb";
 const openExchangeRatesURL = "https://openexchangerates.org/api/latest.json";
 
-$.getJSON(openExchangeRatesURL, {app_id: appID},
+function getInitialData() {
+    $.getJSON(openExchangeRatesURL, {app_id: appID},
         function (data) {
-    if(data){
+            let currInit = [data.rates.USD, data.rates.EUR, data.rates.GBP, data.rates.JPY, data.rates.AUD, data.rates.BGN];
 
-            $("#eur").append((1 / (data.rates.EUR)).toFixed(4));
-            $("#gbp").append((1 / (data.rates.GBP)).toFixed(4));
-            $("#jpy").append((data.rates.JPY).toFixed(4));
-            $("#aud").append((data.rates.AUD).toFixed(4));
-            $("#bgn").append((data.rates.BGN).toFixed(4));
-
-      }
+            for (let i = 1; i < currInit.length; i++) {
+                $("#" + i).append((currInit[i]).toFixed(4));
+            }
         });
+    }
 
-//alternative server request with reusable getData function to be discussed
-/*
-function getData(url,app_id) {
-    return $.getJSON(url, {app_id: app_id }, {});
-}
+setInterval(function updateData() {
 
-getData(openExchangeRatesURL,appID).done(function (newData) {
-    code logic...
-});*/
+    for (let i = 1; i < 6; i++) {
+
+        let cur = Number($("#" + i).html());
+
+        $.getJSON(openExchangeRatesURL, {app_id: appID},
+            function (data) {
+                let currUpdate = [data.rates.USD, data.rates.EUR, data.rates.GBP, data.rates.JPY, data.rates.AUD, data.rates.BGN];
+
+                let diff = cur - Number((currUpdate[i]).toFixed(4));
+                let colorCurr = diff == 0 ? "black" : (diff > 0 ? "red" : "green");
+
+                $("#" + i).css("color", colorCurr);
+                $("#" + i)
+                        .empty()
+                        .append((currUpdate[i])
+                        .toFixed(4));
+            });
+    }
+}, 60000);
+
+
+
+
 
