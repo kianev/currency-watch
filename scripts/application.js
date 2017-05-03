@@ -25,8 +25,7 @@ setInterval(function updateData() {
                 let diff = cur - Number((currUpdate[i]).toFixed(4));
                 let colorCurr = diff == 0 ? "blue" : (diff > 0 ? "red" : "green");
 
-                $("#" + i).css("color", colorCurr);
-                $("#" + i)
+                $("#" + i).css("color", colorCurr)
                         .empty()
                         .append((currUpdate[i])
                         .toFixed(4));
@@ -41,10 +40,8 @@ setInterval(function updateData() {
                         .append('<img src="images/greenArrow1.jpg"/>');
                 }
             });
-
-
     }
-}, 6000);
+}, 60000);
 
 
 
