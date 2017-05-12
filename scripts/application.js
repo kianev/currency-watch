@@ -41,9 +41,22 @@ setInterval(function updateData() {
                 }
             });
     }
-}, 60000);
+}, 6000);
 
+let randomEurRates = setInterval(function () {getRandomFXRates(1.084,1.089)}, 2000);
 
+function getRandomFXRates(min, max) {
+    console.log((Math.random() * (max - min) + min).toFixed(4));
+}
+//clearInterval(randomRates);
 
+//to be discussed
 
+ function getData(url,app_id) {
+ return $.getJSON(url, {app_id: app_id }, {});
+ }
+
+ getData(openExchangeRatesURL,appID).done(function (newData) {
+    //console.log(newData);
+ });
 
