@@ -1,62 +1,70 @@
-const appID = "282beb85831a4aadad7086809d54e5fb";
-const openExchangeRatesURL = "https://openexchangerates.org/api/latest.json";
+/**
+ * 1. Load currency rates
+ *    + Currency data is loaded from Open Exchange rates
+ *    + We use JSON and jQuery to load the rates
+ * 2. Show currency rates (EUR, GPB, JPY, BGN)
+ *    + Currency rates are to be shown in tabular format
+ *      + when a rate goes up, a green arrow should be shown
+ *      + when a rate goes down, a red arrow should be shown
+ * 3. The rates are to be updated every 5 seconds
+ */
 
-function getInitialData() {
-    $.getJSON(openExchangeRatesURL, {app_id: appID},
-        function (data) {
-            let currInit = [data.rates.USD, data.rates.EUR, data.rates.GBP, data.rates.JPY, data.rates.AUD, data.rates.BGN];
+let currenciesToShow = ["EUR", "GBP", "JPY", "BGN", "AUD"];
 
-            for (let i = 1; i < currInit.length; i++) {
-                $("#" + i).append((currInit[i]).toFixed(4));
-            }
-        });
-    }
-
-setInterval(function updateData() {
-
-    for (let i = 1; i < 6; i++) {
-
-        let cur = Number($("#" + i).html());
-
-        $.getJSON(openExchangeRatesURL, {app_id: appID},
-            function (data) {
-                let currUpdate = [data.rates.USD, data.rates.EUR, data.rates.GBP, data.rates.JPY, data.rates.AUD, data.rates.BGN];
-
-                let diff = cur - Number((currUpdate[i]).toFixed(4));
-                let colorCurr = diff == 0 ? "blue" : (diff > 0 ? "red" : "green");
-
-                $("#" + i).css("color", colorCurr)
-                        .empty()
-                        .append((currUpdate[i])
-                        .toFixed(4));
-
-                if(diff > 0){
-                    $(".curr" + i)
-                        .empty()
-                        .append('<img src="images/redArrow1.jpg"/>');
-                }else if(diff < 0){
-                    $(".curr" + i)
-                        .empty()
-                        .append('<img src="images/greenArrow1.jpg"/>');
-                }
-            });
-    }
-}, 6000);
-
-let randomEurRates = setInterval(function () {getRandomFXRates(1.084,1.089)}, 2000);
-
-function getRandomFXRates(min, max) {
-    console.log((Math.random() * (max - min) + min).toFixed(4));
+function initializeTable(currencies) {
+  currencies.forEach((symbol) => {
+    let row = $(`<tr><td>USD/${symbol}</td><td id="${symbol}"></td><td class="arrow"></td></tr>`);
+    $("table#currencies").append(row);
+  });
 }
-//clearInterval(randomRates);
 
-//to be discussed
+function loadCurrencyRates() {
+  $.getJSON("https://openexchangerates.org/api/latest.json", { app_id: "282beb85831a4aadad7086809d54e5fb" }, (data) => {
+    let randomRates = randomizeCurrencyRates(data.rates);
+    showCurrencyRates(randomRates);
+  });
+}
 
- function getData(url,app_id) {
- return $.getJSON(url, {app_id: app_id }, {});
- }
+function randomizeCurrencyRates(rates) {
+  currenciesToShow.forEach(function(symbol) {
+    let value = currency(rates[symbol]);
+    let randomized = Math.random() * ((value + 0.05) - value) + value;
 
- getData(openExchangeRatesURL,appID).done(function (newData) {
-    //console.log(newData);
- });
+    rates[symbol] = randomized;
+  });
 
+  return rates;
+}
+
+function showCurrencyRates(rates) {
+  currenciesToShow.forEach(function(symbol) {
+    let td = $("td#" + symbol.toUpperCase());
+    let arrowTd = td.siblings(".arrow");
+
+    let value = currency(rates[symbol]);
+    let oldValue = currency(td.html());
+
+    td.html(formatCurrency(value));
+    console.log({ value, oldValue, symbol });
+
+    arrowTd.empty();
+    if (value > oldValue) {
+      arrowTd.append('<img src="images/greenArrow1.jpg">');
+    } else if (value < oldValue) {
+      arrowTd.append('<img src="images/redArrow1.jpg">');
+    }
+  });
+}
+
+function currency(value) {
+  return Number(formatCurrency(value));
+}
+
+function formatCurrency(value) {
+  return Number(value).toFixed(4);
+}
+
+$(document).ready(function() {
+  initializeTable(currenciesToShow);
+  setInterval(loadCurrencyRates, 1000);
+});

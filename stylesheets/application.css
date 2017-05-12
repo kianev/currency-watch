@@ -5,3 +5,7 @@ th{
 td{
     text-align: center;
 }
+
+.arrow img {
+  border: 0;
+}
