@@ -1,70 +1,56 @@
-/**
- * 1. Get initial FX Rates from JSON
- * 2. update HTML Table with the data
- * 3. update FX Rates JSON and comparison with the previous FX Ratas
- * 4. get the color codes for movement and arrow signals
- */
 
 const appID = "282beb85831a4aadad7086809d54e5fb";
+const appID1 = "765c6dc585e24300a2718e68dc2c8481";
 const openExchangeRatesURL = "https://openexchangerates.org/api/latest.json";
 
-function getInitialData() {
-    $.getJSON(openExchangeRatesURL, {app_id: appID},
-        function (data) {
-            let currInit = [data.rates.USD, data.rates.EUR, data.rates.GBP, data.rates.JPY, data.rates.AUD, data.rates.BGN];
-                //update initial HTML table with rates
-            for (let i = 1; i < currInit.length; i++) {
-                $("#" + i).append((currInit[i]).toFixed(4));
-            }
-        });
-    }
+let desiredRates =["EUR","GBP", "JPY", "AUD", "BGN",];
 
-setInterval(function updateData() {
-
-    for (let i = 1; i < 6; i++) {
-       //comparison initial rates
-        let cur = Number($("#" + i).html());
-       //get the new rates
-        $.getJSON(openExchangeRatesURL, {app_id: appID},
-            function (data) {
-                let currUpdate = [data.rates.USD, data.rates.EUR, data.rates.GBP, data.rates.JPY, data.rates.AUD, data.rates.BGN];
-
-                let diff = cur - Number((currUpdate[i]).toFixed(4));
-                let colorCurr = diff == 0 ? "blue" : (diff > 0 ? "red" : "green");
-
-                $("#" + i).css("color", colorCurr)
-                        .empty()
-                        .append((currUpdate[i])
-                        .toFixed(4));
-
-                if(diff > 0){
-                    $(".curr" + i)
-                        .empty()
-                        .append('<img src="images/redArrow1.jpg"/>');
-                }else if(diff < 0){
-                    $(".curr" + i)
-                        .empty()
-                        .append('<img src="images/greenArrow1.jpg"/>');
-                }
-            });
-    }
-}, 6000);
-
-let randomEurRates = setInterval(function () {getRandomFXRates(1.084,1.089)}, 2000);
-
-function getRandomFXRates(min, max) {
-    console.log((Math.random() * (max - min) + min).toFixed(4));
+function setTable(currencies) {
+    currencies.forEach(function (symbol) {
+        let cell = $(`<tr><td>USD/${symbol}</td><td id="${symbol.toLowerCase()}"></td><td class="curr"></td></tr>`);
+        $("table#currencies").append(cell);
+    })
 }
-//clearInterval(randomRates);
 
-//to be discussed
+function getRates() {
+    $.getJSON(openExchangeRatesURL,{app_id: appID1}, (data) => {
+        let randomizedRates = randomRates(data.rates);
+        showRates(randomizedRates)
+    })
+}
 
- function getData(url,app_id) {
- return $.getJSON(url, {app_id: app_id }, {});
- }
+function randomRates(rates) {
+    desiredRates.forEach(function (symbol) {
+        let value = Number(formatRates(rates[symbol]));
+        let randomRate = Math.random() * ((value + 0.005) - value) + value;
 
- getData(openExchangeRatesURL,appID).done(function (newData) {
+        rates[symbol] = randomRate;
+    });
+    return rates;
+}
 
-    //console.log(newData);
- });
+function showRates(rates) {
+    desiredRates.forEach(function (symbol) {
+        let td = $("td#" + symbol.toLowerCase());
+        let currTd = td.siblings(".curr");
 
+        let htmlValue = Number(formatRates(td.html()));
+        let value = Number(formatRates(rates[symbol]));
+
+        td.html(value);
+
+        currTd.empty();
+        if(value > htmlValue){
+            currTd.append('<img src="images/greenArrow1.jpg">');
+        }else if(value < htmlValue){
+            currTd.append('<img src="images/redArrow1.jpg">');
+        }
+
+    })
+}
+
+function formatRates(data) {
+    return Number(data).toFixed(4);
+}
+
+setInterval(getRates, 5000);
