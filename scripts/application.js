@@ -3,7 +3,20 @@ const appID = "282beb85831a4aadad7086809d54e5fb";
 const appID1 = "765c6dc585e24300a2718e68dc2c8481";
 const openExchangeRatesURL = "https://openexchangerates.org/api/latest.json";
 
-let desiredRates =["EUR","GBP", "JPY", "AUD", "BGN",];
+let desiredRates = ["EUR","GBP", "JPY", "AUD",];
+
+$(document).on("click", "#button1", function () {
+    let addCurrency = [];
+    $.each($("input[name='currency']:checked"),function () {
+        addCurrency.push($(this).val());
+    });
+    updateArray(addCurrency);
+});
+
+function updateArray(array) {
+    let arrayUpdated = desiredRates.concat(array);
+    return arrayUpdated;
+}
 
 function setTable(currencies) {
     currencies.forEach(function (symbol) {
