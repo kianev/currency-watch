@@ -17,6 +17,10 @@
 </table>
 </br>
 <form id="checkbox">
+    <label><input type="checkbox" name="currency" value="EUR" checked> USD/EUR</label>
+    <label><input type="checkbox" name="currency" value="GBP" checked> USD/GBP</label>
+    <label><input type="checkbox" name="currency" value="JPY" checked> USD/JPY</label>
+    <label><input type="checkbox" name="currency" value="AUD" checked> USD/AUD</label>
     <label><input type="checkbox" name="currency" value="CHF"> USD/CHF</label>
     <label><input type="checkbox" name="currency" value="BGN"> USD/BGN</label>
     </br>
@@ -25,8 +29,7 @@
 <button type="button" id="button1">Select</button>
 <script>
     $(function(){
-        setTable(desiredRates);
-        getRates();
+        initTicker();
     });
 </script>
 

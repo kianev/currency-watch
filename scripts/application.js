@@ -1,39 +1,38 @@
-
-const appID = "282beb85831a4aadad7086809d54e5fb";
-const appID1 = "765c6dc585e24300a2718e68dc2c8481";
+//const appID = "282beb85831a4aadad7086809d54e5fb";
+const appID = "765c6dc585e24300a2718e68dc2c8481";
 const openExchangeRatesURL = "https://openexchangerates.org/api/latest.json";
 
-let desiredRates = ["EUR","GBP", "JPY", "AUD",];
 
 $(document).on("click", "#button1", function () {
-    let addCurrency = [];
-    $.each($("input[name='currency']:checked"),function () {
-        addCurrency.push($(this).val());
-    });
-    updateArray(addCurrency);
+    initTable();
 });
 
-function updateArray(array) {
-    let arrayUpdated = desiredRates.concat(array);
-    return arrayUpdated;
+function getDesiredRates() {
+    let symbols = [];
+    $.each($("input[name='currency']:checked"), function () {
+        symbols.push($(this).val());
+    });
+    return symbols;
 }
 
-function setTable(currencies) {
-    currencies.forEach(function (symbol) {
-        let cell = $(`<tr><td>USD/${symbol}</td><td id="${symbol.toLowerCase()}"></td><td class="curr"></td></tr>`);
-        $("table#currencies").append(cell);
+function initTable() {
+    let table = $("table#currencies");
+    $("tr.currency", table).remove();
+    getDesiredRates().forEach(function (symbol) {
+        let row = $(`<tr class="currency"><td>USD/${symbol}</td><td id="${symbol.toLowerCase()}"></td><td class="curr"></td></tr>`);
+        table.append(row);
     })
 }
 
-function getRates() {
-    $.getJSON(openExchangeRatesURL,{app_id: appID1}, (data) => {
+function refreshTickerTable() {
+    $.getJSON(openExchangeRatesURL, {app_id: appID}, (data) => {
         let randomizedRates = randomRates(data.rates);
-        showRates(randomizedRates)
+        updateTicker(randomizedRates)
     })
 }
 
 function randomRates(rates) {
-    desiredRates.forEach(function (symbol) {
+    getDesiredRates().forEach(function (symbol) {
         let value = Number(formatRates(rates[symbol]));
         let randomRate = Math.random() * ((value + 0.005) - value) + value;
 
@@ -42,8 +41,8 @@ function randomRates(rates) {
     return rates;
 }
 
-function showRates(rates) {
-    desiredRates.forEach(function (symbol) {
+function updateTicker(rates) {
+    getDesiredRates().forEach(function (symbol) {
         let td = $("td#" + symbol.toLowerCase());
         let currTd = td.siblings(".curr");
 
@@ -53,9 +52,9 @@ function showRates(rates) {
         td.html(value);
 
         currTd.empty();
-        if(value > htmlValue){
+        if (value > htmlValue) {
             currTd.append('<img src="images/greenArrow1.jpg">');
-        }else if(value < htmlValue){
+        } else if (value < htmlValue) {
             currTd.append('<img src="images/redArrow1.jpg">');
         }
 
@@ -66,4 +65,7 @@ function formatRates(data) {
     return Number(data).toFixed(4);
 }
 
-setInterval(getRates, 5000);
+function initTicker() {
+    initTable();
+    setInterval(refreshTickerTable, 1000)
+}
