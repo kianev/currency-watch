@@ -1,32 +1,70 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Currency Watch</title>
+    <title>FX Live Ticker</title>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
     <script src="scripts/application.js"></script>
+    <script src="bootstrap/js/bootstrap.js"></script>
+    <script src="scripts/application.js"></script>
+    <link rel="stylesheet" type="text/css" href="stylesheets/application.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="stylesheets/application.css">
 </head>
-<body>
-<table id="currencies">
-    <tr>
-        <th>Currency</th>
-        <th>Rate</th>
-        <th>&nbsp;</th>
-    </tr>
-</table>
-</br>
-<form id="checkbox">
-    <label><input type="checkbox" name="currency" value="EUR" checked> USD/EUR</label>
-    <label><input type="checkbox" name="currency" value="GBP" checked> USD/GBP</label>
-    <label><input type="checkbox" name="currency" value="JPY" checked> USD/JPY</label>
-    <label><input type="checkbox" name="currency" value="AUD" checked> USD/AUD</label>
-    <label><input type="checkbox" name="currency" value="CHF"> USD/CHF</label>
-    <label><input type="checkbox" name="currency" value="BGN"> USD/BGN</label>
-    </br>
 
-</form>
-<button type="button" id="button1">Select</button>
+<body>
+
+<div class="container">
+    <div class="col-md-3">
+        <div class="page-header">
+         <h3>FX Live Ticker</h3>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="col-md-3">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Realtime FX rates (simulation)</div>
+            <table id="currencies" class="table">
+                <tr>
+                    <th>Currency</th>
+                    <th>Rate</th>
+                    <th>Change</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="col-md-3">
+        <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#demo">Add more</button>
+            <div id="demo" class="collapse">
+                <form id="checkbox">
+                    <label><input type="checkbox" name="currency" value="EUR" checked> USD/EUR</label>
+                    <label><input type="checkbox" name="currency" value="GBP" checked> USD/GBP</label>
+                    <label><input type="checkbox" name="currency" value="JPY" checked> USD/JPY</label>
+                    <label><input type="checkbox" name="currency" value="AUD" checked> USD/AUD</label>
+                    <label><input type="checkbox" name="currency" value="CHF" checked> USD/CHF</label>
+                    <label><input type="checkbox" name="currency" value="BGN" checked> USD/BGN</label>
+                    <label><input type="checkbox" name="currency" value="CAD"> USD/CAD</label>
+                    <label><input type="checkbox" name="currency" value="CNH"> USD/CNH</label>
+                    <label><input type="checkbox" name="currency" value="NZD"> USD/NZD</label>
+                    <label><input type="checkbox" name="currency" value="RUB"> USD/RUB</label>
+                    <label><input type="checkbox" name="currency" value="TRY"> USD/TRY</label>
+                    <label><input type="checkbox" name="currency" value="HKD"> USD/HKD</label>
+                    </br>
+                </form>
+                <button type="button" id="button1">Select</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <script>
     $(function(){
         initTicker();

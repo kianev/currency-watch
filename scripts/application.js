@@ -19,7 +19,8 @@ function initTable() {
     let table = $("table#currencies");
     $("tr.currency", table).remove();
     getDesiredRates().forEach(function (symbol) {
-        let row = $(`<tr class="currency"><td>USD/${symbol}</td><td id="${symbol.toLowerCase()}"></td><td class="curr"></td></tr>`);
+        let row = $(`<tr class="currency"><td>USD/${symbol}</td><td id="${symbol
+            .toLowerCase()}"></td><td class="change"></td><td class="curr"></td></tr>`);
         table.append(row);
     })
 }
@@ -34,7 +35,7 @@ function refreshTickerTable() {
 function randomRates(rates) {
     getDesiredRates().forEach(function (symbol) {
         let value = Number(formatRates(rates[symbol]));
-        let randomRate = Math.random() * ((value + 0.005) - value) + value;
+        let randomRate = Math.random() * ((value + 0.01) - value) + value;
 
         rates[symbol] = randomRate;
     });
@@ -45,19 +46,26 @@ function updateTicker(rates) {
     getDesiredRates().forEach(function (symbol) {
         let td = $("td#" + symbol.toLowerCase());
         let currTd = td.siblings(".curr");
+        let changeTd = td.siblings(".change");
 
         let htmlValue = Number(formatRates(td.html()));
         let value = Number(formatRates(rates[symbol]));
 
         td.html(value);
 
-        currTd.empty();
-        if (value > htmlValue) {
-            currTd.append('<img src="images/greenArrow1.jpg">');
-        } else if (value < htmlValue) {
-            currTd.append('<img src="images/redArrow1.jpg">');
-        }
+        if (htmlValue > 0) {
+            let change = Number(formatRates(value - htmlValue));
+            changeTd.html(change);
 
+            currTd.empty();
+            if (value > htmlValue) {
+                currTd.append('<img src="images/greenArrow1.jpg">');
+                changeTd.css({"background-color": "#5CB85C", "color": "white"})
+            } else if (value < htmlValue) {
+                currTd.append('<img src="images/redArrow1.jpg">');
+                changeTd.css({"background-color": "#FF4A68", "color": "white"})
+            }
+        }
     })
 }
 
