@@ -9,6 +9,13 @@ td {
 
 td.change {
     text-align: right;
+    transition: background-color 0.25s linear;
 }
 
+td:hover {
+    background-color: #F5F5F5;
+}
 
+td.chart {
+    text-align: center;
+}

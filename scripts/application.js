@@ -7,6 +7,10 @@ $(document).on("click", "#button1", function () {
     initTable();
 });
 
+$(document).on("click", ".chart", function () {
+    alert($(this).attr("id"));
+});
+
 function getDesiredRates() {
     let symbols = [];
     $.each($("input[name='currency']:checked"), function () {
@@ -20,7 +24,7 @@ function initTable() {
     $("tr.currency", table).remove();
     getDesiredRates().forEach(function (symbol) {
         let row = $(`<tr class="currency"><td>USD/${symbol}</td><td id="${symbol
-            .toLowerCase()}"></td><td class="change"></td><td class="curr"></td></tr>`);
+            .toLowerCase()}"></td><td class="change"></td><td class="chart" id="${symbol}"></td></tr>`);
         table.append(row);
     })
 }
@@ -47,6 +51,7 @@ function updateTicker(rates) {
         let td = $("td#" + symbol.toLowerCase());
         let currTd = td.siblings(".curr");
         let changeTd = td.siblings(".change");
+        let chartTd = td.siblings(".chart");
 
         let htmlValue = Number(formatRates(td.html()));
         let value = Number(formatRates(rates[symbol]));
@@ -56,13 +61,15 @@ function updateTicker(rates) {
         if (htmlValue > 0) {
             let change = Number(formatRates(value - htmlValue));
             changeTd.html(change);
+            chartTd.empty();
+            chartTd.append('<img src="images/charticon1.jpg">').css("cursor", "pointer");
 
             currTd.empty();
             if (value > htmlValue) {
-                currTd.append('<img src="images/greenArrow1.jpg">');
+                //currTd.append('<img src="images/greenArrow1.jpg">');
                 changeTd.css({"background-color": "#5CB85C", "color": "white"})
             } else if (value < htmlValue) {
-                currTd.append('<img src="images/redArrow1.jpg">');
+                //currTd.append('<img src="images/redArrow1.jpg">');
                 changeTd.css({"background-color": "#FF4A68", "color": "white"})
             }
         }
@@ -75,5 +82,5 @@ function formatRates(data) {
 
 function initTicker() {
     initTable();
-    setInterval(refreshTickerTable, 1000)
+    setInterval(refreshTickerTable, 5000)
 }
